@@ -1,0 +1,71 @@
+$*************HEADING***********************************
+$
+PROJ 'sedcolab' 'R000'
+$
+$  USCRP SEDCOLAB : bichromatic waves + bound wave in CHL 10-m flume
+$
+$***********MODEL INPUT*********************************
+$
+$ CH: Could set water level here.
+$ SET 1.
+$
+MODE NONST ONED
+$
+$ highres = 0.025 m resolution
+$CGRID REG 0. 0. 0. 60. 0. 2400 0
+
+$ lowres = 0.1 m resolution
+CGRID REG 0. 0. 0. 60. 0. 600 0
+$
+$ CH: 2 equally spaced vertical levels
+$ With low resolution, we must apply the command BREAK
+VERT 2 
+$
+INPGRID BOTTOM 0. 0. 0. 60 0 1. 1.
+READINP BOTTOM 1. 'sedcolab_1on35cont.bot' 1 1 FREE
+$
+$ CH: is this relative to still water level set above?
+INIT ZERO 
+$
+BOU SIDE W CCW BTYPE WEAK ADDBOUNDWAVE CON BICH 0.05 0.05 2.5 2. 0. 0.
+$
+NONHYDrostatic
+FRIC MANNING 0.019
+VISC VERTICAL KEPS
+BREAKING
+$
+DISCRET UPW MOM
+TIMEI 0.4 0.8 $ timestep changes to meet min and max CFL
+$
+$************ OUTPUT REQUESTS *************************
+$
+POINTS 'stat0' 1 0.
+POINTS 'stat1' 10 0.
+POINTS 'stat2' 15 0.
+POINTS 'stat3' 20 0.
+POINTS 'stat4' 25 0.
+POINTS 'stat5' 30 0.
+POINTS 'stat6' 35 0.
+POINTS 'stat7' 40 0.
+POINTS 'stat8' 45 0.
+POINTS 'stat9' 50 0.
+POINTS 'stat10' 55 0.
+$
+$TABLE  'stat0' NOHEAD 'station0.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat1' NOHEAD 'station1.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat2' NOHEAD 'station2.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat3' NOHEAD 'station3.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat4' NOHEAD 'station4.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat5' NOHEAD 'station5.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat6' NOHEAD 'station6.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat7' NOHEAD 'station7.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat8' NOHEAD 'station8.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat9' NOHEAD 'station9.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$TABLE  'stat10' NOHEAD 'station10.tbl' TSEC WATL OUTPUT 000000.000 1.0 SEC
+$
+GROUP 'grid' SUBGrid 1 600 1 1
+TABLE 'grid' NOHEAD 'grid_output.tbl' TSEC XP WATLEV BOTLEV DEPTH VEL BRKP HRUN OUTPUT 000000.000 0.5 SEC
+
+$TEST 1,0
+COMPUTE 000000.000 0.01 SEC 000060.000
+STOP
