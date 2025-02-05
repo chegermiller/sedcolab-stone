@@ -289,11 +289,12 @@ def calc_LH_boundwave(a1, a2, f1, f2, h, t):
     kg = abs(k1 - k2)
     fg = abs(f1 - f2)  # Group frequency
     cg = omegag / kg
-    Eg_t = 0.5 * rho * g * ((a1 + a2) * np.cos(0.5 * omegag * t)) ** 2 # energy of group as a fn of time
-    Sxx_t = Eg_t * (( 2 * cg / c ) - 0.5) # radiation stress of group as a fn of time
-    ag_t = - (1/rho) * Sxx_t / (g * h - cg**2) # amplitude of bound wave as a fn of time
+    Eg = 0.5 * rho * g * ((a1 + a2) * np.cos(0.5 * omegag * t)) ** 2 # energy of group as a fn of time
+    Sxx = Eg * (( 2 * cg / c ) - 0.5) # radiation stress of group as a fn of time
+    etab = - (1/rho) * Sxx / (g * h - cg**2) # amplitude of bound wave as a fn of time
+    ab = - np.min(etab) / 2
     
-    return ag_t
+    return etab, ab
 
 def find_closest_index(lst, target):
     closest_index = min(range(len(lst)), key=lambda i: abs(lst[i] - target))
