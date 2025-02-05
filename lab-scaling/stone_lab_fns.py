@@ -267,7 +267,7 @@ def define_profile(lab_slope, lab_depth, lab_beach, lab_length, swl):
 
     # Window location
     winloc = ft2m(115.41 + 0.31 + np.array([0, 48]))
-    
+     
     return d, h, winloc
 
 def calc_LH_boundwave(a1, a2, f1, f2, h, t):
