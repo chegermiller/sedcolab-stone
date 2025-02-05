@@ -270,6 +270,31 @@ def define_profile(lab_slope, lab_depth, lab_beach, lab_length, swl):
     
     return d, h, winloc
 
+def calc_LH_boundwave(a1, a2, f1, f2, h, t):
+    rho = 997
+    g = 9.81
+    
+    # Average wave statistics
+    T = 2 / (f1 + f2)  # Peak wave period
+    omega0, k0 = calc_omega_k((f1 + f2)/2, h)  # Angular frequency and wavenumber of bichromatic waves
+    L = 2 * np.pi / k0  # Wavelength
+    c = L / T
+    
+    # statistics of individual waves
+    [omega1, k1] = calc_omega_k(f1, h)
+    [omega2, k2] = calc_omega_k(f2, h)
+    
+    # group stats
+    omegag = abs(omega1 - omega2)
+    kg = abs(k1 - k2)
+    fg = abs(f1 - f2)  # Group frequency
+    cg = omegag / kg
+    Eg_t = 0.5 * rho * g * ((a1 + a2) * np.cos(0.5 * omegag * t)) ** 2 # energy of group as a fn of time
+    Sxx_t = Eg_t * (( 2 * cg / c ) - 0.5) # radiation stress of group as a fn of time
+    ag_t = - (1/rho) * Sxx_t / (g * h - cg**2) # amplitude of bound wave as a fn of time
+    
+    return ag_t
+
 def find_closest_index(lst, target):
     closest_index = min(range(len(lst)), key=lambda i: abs(lst[i] - target))
     return closest_index
